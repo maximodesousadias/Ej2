@@ -44,24 +44,46 @@ const pizzas = [
     ];
 
 /*
-Vamos a utilizar el mismo array de objetos "Pizzas🍕" del desafío general anterior. 
+Utilizando el querido array de objetos "Pizzas🍕", realizar el siguiente desafío: 
 
-👉 Crear un archivo HTML que contenga un h2, un h4, un input number y un botón. 
+👉 A cada Pizza, agregarle una imagen. 
+👉 Guardar el array en el local storage. 
+👉 Crear un archivo HTML que contenga un card en donde se renderice el nombre, imagen, ingredientes y precio de una pizza (Estilizarlo con CSS 🎨). 
+👉 Debajo del card tiene que haber un input y un botón. 
 
-👉 El desafío será, al tocar el botón, capturar el valor ingresado en el input.
-👉 Renderizar en el h2 el nombre y en el h4 el precio de la pizza cuyo id coincida con el numero ingresado en el input. 
+Deberemos colocar un numero en el input y, al apretar el botón, deberá renderizar en el card la pizza cuyo id coincida con el numero ingresado en el input.
 
-🚨 Si no coincide con ningún id, renderizar un mensaje de error. 
+🚨 Si no coincide con ningún id, renderizar un mensaje de error.
+
+🆙 En Eduflow, colocar el repositorio de Github, en el cual debe figurar el vercel deployado. 
 */
 
 //Paso 1:
 
 const input = document.querySelector('.input-text')
-const nameBlank = document.querySelector('.output-name')
-const priceBlank = document.querySelector('.output-price')
+const nameBlank = document.querySelector('.card')
 const addForm = document.querySelector('.add-form')
 
 //Paso 2:
+//Guardo en el Local Storage
+
+const saveLocalStorage = array => {
+    localStorage.setItem('pizzas', JSON.stringify(pizzas));
+}
+
+//Esta funcionando?
+
+//Paso 3:
+
+const renderCard = pizza => {
+    const {id, nombre, ingredientes, precio} = pizza;
+    return `
+        <img class="pizza-pic" src="./img/img-${id}.jpg">
+        <h3>${nombre}</h3>
+        <p><b>Ingredientes: </b>${ingredientes}</p>
+        <h4>$${precio}</h4>
+        `
+}
 
 const matchId = e => {
 
@@ -70,19 +92,29 @@ const matchId = e => {
     const inputValue = parseInt(input.value);
 
     if(pizzas.some(pizza => pizza.id == inputValue)){
-        //const pizzaName = pizza => pizzas.
-        //pizzaId = pizzas.map(pizza => pizza.id == inputValue).name
-        //nameBlank.innerHTML = pizzas.map(pizza => pizza.id == inputValue).name
+
         const pizzaObject = pizzas.filter(pizza => pizza.id == inputValue)[0];
-        nameBlank.innerHTML = `La pizza que seleccionaste es ${pizzaObject.nombre}`;
-        priceBlank.innerHTML = `Su precio es de $${pizzaObject.precio}`;
+        
+        nameBlank.innerHTML = renderCard(pizzaObject)
         return;
-    }else{
-        alert("ERROR. Intente con otro ID");
+
+    }else if(inputValue > 7 || 0 > inputValue){
+        nameBlank.innerHTML = `<b>ERROR: </b>Debes seleccionar un valor entre 0 y 7.`
+    }else if(isNaN(inputValue)){
+        nameBlank.innerHTML = `<b>ERROR: </b>El buscador solo permite números.`
     }
 }
 
+const formEventListener = () => {
+    addForm.addEventListener('submit', matchId)
+}
+    
 //Paso 3:
 
-addForm.addEventListener('submit', matchId)
+const init = () => {
+    formEventListener()
+
+}
+
+init()
 
